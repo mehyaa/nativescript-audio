@@ -365,15 +365,21 @@ export class TNSPlayer implements TNSPlayerI {
   }
 
   private _getAndroidContext() {
-    const ctx = app.android.context
-    if (ctx === null) {
+    let ctx = app.android.context;
+
+    if (!ctx) {
+      ctx = app.getNativeApplication().getApplicationContext();
+    }
+
+    if (!ctx) {
       setTimeout(() => {
         this._getAndroidContext();
       }, 200);
+
       return;
-    } else {
-      return ctx;
     }
+
+    return ctx;
   }
 
   private _mOnAudioFocusChangeListener = new android.media.AudioManager.OnAudioFocusChangeListener({
